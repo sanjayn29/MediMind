@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { Brain, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Brain, Target, TrendingUp, AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { apiService, type DiagnosisResponse } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 
 interface Diagnosis {
   id: string;
@@ -16,39 +18,72 @@ interface Diagnosis {
 
 export const DiagnosisAgent = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([
-    {
-      id: '1',
-      name: 'Migraine with Aura',
-      probability: 89,
-      confidence: 'High',
-      symptoms: ['Unilateral headache', 'Visual disturbances', 'Nausea', 'Photophobia'],
-      differentials: ['Tension headache', 'Cluster headache', 'Intracranial lesion']
-    },
-    {
-      id: '2',
-      name: 'Tension-Type Headache',
-      probability: 67,
-      confidence: 'Moderate',
-      symptoms: ['Bilateral headache', 'Pressure sensation', 'Mild to moderate intensity'],
-      differentials: ['Migraine', 'Cervicogenic headache']
-    },
-    {
-      id: '3',
-      name: 'Secondary Headache',
-      probability: 23,
-      confidence: 'Low',
-      symptoms: ['Recent onset', 'Pattern change'],
-      differentials: ['Primary headache disorders']
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+  const [diagnosisData, setDiagnosisData] = useState<DiagnosisResponse | null>(null);
+  const [apiConnected, setApiConnected] = useState(false);
+  const { toast } = useToast();
+
+  // Check API connection on component mount
+  useEffect(() => {
+    checkApiConnection();
+  }, []);
+
+  const checkApiConnection = async () => {
+    try {
+      await apiService.healthCheck();
+      setApiConnected(true);
+    } catch (error) {
+      console.error('API connection failed:', error);
+      setApiConnected(false);
+      toast({
+        title: "API Connection Failed",
+        description: "Unable to connect to diagnosis service. Using demo data.",
+        variant: "destructive"
+      });
     }
-  ]);
+  };
 
   const runDiagnosisAnalysis = async () => {
     setIsAnalyzing(true);
-    // Simulate AI analysis
-    setTimeout(() => {
+    
+    try {
+      // For demo purposes, we'll use sample symptoms
+      const sampleSymptoms = ['headache', 'nausea', 'sensitivity to light'];
+      const response = await apiService.diagnoseSymptoms({
+        symptoms: sampleSymptoms
+      });
+      
+      setDiagnosisData(response);
+      setDiagnoses(response.diagnoses.map((d, index) => ({
+        id: (index + 1).toString(),
+        name: d.name,
+        probability: d.probability,
+        confidence: getConfidenceLevel(d.probability),
+        symptoms: d.symptoms,
+        differentials: d.differentials
+      })));
+      
+      toast({
+        title: "Analysis Complete",
+        description: `Found ${response.diagnoses.length} potential diagnoses with ${response.confidence_score.toFixed(1)}% confidence.`
+      });
+      
+    } catch (error) {
+      console.error('Diagnosis analysis failed:', error);
+      toast({
+        title: "Analysis Failed",
+        description: "Unable to perform diagnosis analysis. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsAnalyzing(false);
-    }, 3000);
+    }
+  };
+
+  const getConfidenceLevel = (probability: number): string => {
+    if (probability >= 80) return 'High';
+    if (probability >= 60) return 'Moderate';
+    return 'Low';
   };
 
   const getConfidenceColor = (confidence: string) => {
@@ -76,14 +111,28 @@ export const DiagnosisAgent = () => {
           <h3 className="text-lg font-semibold text-foreground">Diagnosis Agent</h3>
           <p className="text-sm text-muted-foreground">AI-powered differential diagnosis matching</p>
         </div>
-        <Button
-          onClick={runDiagnosisAnalysis}
-          variant="medical"
-          disabled={isAnalyzing}
-        >
-          <Target className="h-4 w-4 mr-2" />
-          {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button
+            onClick={runDiagnosisAnalysis}
+            variant="medical"
+            disabled={isAnalyzing}
+          >
+            {isAnalyzing ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Target className="h-4 w-4 mr-2" />
+            )}
+            {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
+          </Button>
+          <Button
+            onClick={checkApiConnection}
+            variant="outline"
+            size="icon"
+            title="Check API Connection"
+          >
+            <RefreshCw className={`h-4 w-4 ${apiConnected ? 'text-green-500' : 'text-red-500'}`} />
+          </Button>
+        </div>
       </div>
 
       {isAnalyzing && (
@@ -108,7 +157,13 @@ export const DiagnosisAgent = () => {
           </div>
         </div>
 
-        {diagnoses.map((diagnosis, index) => (
+        {diagnoses.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <p>No diagnoses available. Run analysis to get started.</p>
+          </div>
+        ) : (
+          diagnoses.map((diagnosis, index) => (
           <div
             key={diagnosis.id}
             className="p-4 border border-border rounded-lg bg-card hover:shadow-card transition-shadow"
@@ -169,7 +224,8 @@ export const DiagnosisAgent = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
     </Card>
   );

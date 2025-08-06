@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { MessageSquare, Mic, Send, Plus, X } from 'lucide-react';
+import { MessageSquare, Mic, Send, Plus, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { apiService, type SymptomRequest } from '@/lib/api';
 
 export const SymptomCollector = () => {
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [currentSymptom, setCurrentSymptom] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
   const addSymptom = () => {
@@ -34,6 +36,44 @@ export const SymptomCollector = () => {
         title: "Voice Recording",
         description: "Listening for symptoms... (Demo mode)"
       });
+    }
+  };
+
+  const processSymptoms = async () => {
+    if (symptoms.length === 0) {
+      toast({
+        title: "No Symptoms",
+        description: "Please add symptoms before processing.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const request: SymptomRequest = {
+        symptoms: symptoms
+      };
+      
+      const response = await apiService.diagnoseSymptoms(request);
+      
+      toast({
+        title: "Analysis Complete",
+        description: `Found ${response.diagnoses.length} potential diagnoses with ${response.confidence_score.toFixed(1)}% confidence.`
+      });
+
+      // You can emit an event or use a callback to pass data to other components
+      // For now, we'll just show a success message
+      
+    } catch (error) {
+      console.error('Diagnosis error:', error);
+      toast({
+        title: "Analysis Failed",
+        description: "Unable to process symptoms. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -96,9 +136,18 @@ export const SymptomCollector = () => {
                 </Badge>
               ))}
             </div>
-            <Button variant="medical" className="w-full">
-              <Send className="h-4 w-4 mr-2" />
-              Process Symptoms ({symptoms.length})
+            <Button 
+              variant="medical" 
+              className="w-full"
+              onClick={processSymptoms}
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4 mr-2" />
+              )}
+              {isProcessing ? 'Processing...' : `Process Symptoms (${symptoms.length})`}
             </Button>
           </div>
         )}
