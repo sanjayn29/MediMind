@@ -71,16 +71,16 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gray-900 border-b border-blue-800/50 shadow-md">
+      <header className="bg-[#000000] shadow-sm border-b-[#E0E0E0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
-                <Stethoscope className="h-8 w-8 text-blue-300" />
+                <Stethoscope className="h-10 w-10 text-[#43A047]" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">MediMind</h1>
-                <p className="text-xs text-blue-300">AI-Powered Healthcare</p>
+                <h1 className="text-2xl font-bold text-[#FFFFFF]">MediMind</h1>
+                <p className="text-xs font-bold text-[#B0B0B0]">AI-Powered Healthcare</p>
               </div>
             </div>
             <Button

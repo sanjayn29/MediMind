@@ -47,7 +47,7 @@ const Dashboard = () => {
       toast({
         title: "Logged Out",
         description: "You have been successfully logged out",
-        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+        style: { background: '#4CAF50', color: '#FFFFFF' }
       });
       navigate('/auth');
     } else {
@@ -55,7 +55,7 @@ const Dashboard = () => {
         title: "Logout Failed",
         description: result.error,
         variant: "destructive",
-        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
+        style: { background: '#E53935', color: '#FFFFFF' }
       });
     }
   };
@@ -65,7 +65,7 @@ const Dashboard = () => {
     toast({
       title: "Diagnosis Complete",
       description: "Your diagnosis has been saved to your history",
-      style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+      style: { background: '#4CAF50', color: '#FFFFFF' }
     });
   };
 
@@ -73,8 +73,8 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#F5F9FC] via-[#FFFFFF] to-[#F5F9FC] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E88E5] mx-auto mb-4"></div> {/* Primary Blue */}
-          <p className="text-[#616161]">Loading...</p> {/* Medium Gray */}
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E88E5] mx-auto mb-4"></div>
+          <p className="text-[#616161]">Loading...</p>
         </div>
       </div>
     );
@@ -83,43 +83,42 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F5F9FC] via-[#FFFFFF] to-[#F5F9FC]">
       {/* Header */}
-      <header className="bg-[#FFFFFF] shadow-sm border-b-[#E0E0E0]">
+      <header className="bg-[#000000] shadow-sm border-b-[#E0E0E0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
-                <Heart className="h-8 w-8 text-[#1E88E5]" /> {/* Primary Blue */}
-                <Stethoscope className="h-8 w-8 text-[#43A047]" /> {/* Secondary Green */}
+                <Stethoscope className="h-10 w-10 text-[#43A047]" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-[#212121]">Medical Diagnosis Assistant</h1> {/* Dark Gray */}
-                <p className="text-xs text-[#616161]">AI-Powered Healthcare</p> {/* Medium Gray */}
+                <h1 className="text-2xl font-bold text-[#FFFFFF]">MediMind</h1>
+                <p className="text-xs font-bold text-[#B0B0B0]">AI-Powered Healthcare</p>
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-sm text-[#616161]"> {/* Medium Gray */}
-                <User className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+              <div className="flex items-center space-x-2 text-8sm text-[#B0B0B0]">
+                <User className="h-5 w-6 font-bold text-[#1E88E5]" />
                 <span>{user?.email}</span>
               </div>
               <Button
                 onClick={() => navigate('/about')}
                 variant="outline"
                 size="sm"
-                className="flex items-center space-x-2 border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
+                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
               >
-                <Info className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+                <Info className="h-6 w-6" />
                 <span>About</span>
               </Button>
               <Button
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="flex items-center space-x-2 border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
+                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
               >
-                <LogOut className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+                <LogOut className="h-6 w-6" />
                 <span>Logout</span>
               </Button>
             </div>
@@ -130,37 +129,37 @@ const Dashboard = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
+                className="bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
               >
-                {isMobileMenuOpen ? <X className="h-4 w-4 text-[#1E88E5]" /> : <Menu className="h-4 w-4 text-[#1E88E5]" />} {/* Primary Blue */}
+                {isMobileMenuOpen ? <X className="h-4 w-4 text-[#1E88E5]" /> : <Menu className="h-4 w-4 text-[#1E88E5]" />}
               </Button>
             </div>
           </div>
 
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t-[#E0E0E0]"> {/* Light Gray */}
+            <div className="md:hidden py-4 border-t-[#E0E0E0] bg-[#000000]">
               <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-2 text-sm text-[#616161]"> {/* Medium Gray */}
-                  <User className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+                <div className="flex items-center space-x-2 text-sm text-[#B0B0B0]">
+                  <User className="h-4 w-4 text-[#1E88E5]" />
                   <span>{user?.email}</span>
                 </div>
                 <Button
                   onClick={() => navigate('/about')}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
+                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
                 >
-                  <Info className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+                  <Info className="h-4 w-4 text-[#1E88E5]" />
                   <span>About</span>
                 </Button>
                 <Button
                   onClick={handleLogout}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
+                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
                 >
-                  <LogOut className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
+                  <LogOut className="h-4 w-4 text-[#1E88E5]" />
                   <span>Logout</span>
                 </Button>
               </div>
@@ -175,23 +174,23 @@ const Dashboard = () => {
           {/* Left Column - Diagnosis Form & History */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tab Navigation */}
-            <div className="flex space-x-1 bg-[#F5F9FC] p-1 rounded-lg"> {/* Light Background */}
+            <div className="flex space-x-1 bg-[#F5F9FC] p-1 rounded-lg">
               <Button
                 variant={activeTab === 'diagnosis' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setActiveTab('diagnosis')}
-                className={`flex-1 ${activeTab === 'diagnosis' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`} // Primary Blue, White, Dark Gray, Light Gray
+                className={`flex-1 ${activeTab === 'diagnosis' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`}
               >
-                <Activity className="h-4 w-4 mr-2 text-[#43A047]" /> {/* Secondary Green */}
+                <Activity className="h-4 w-4 mr-2 text-[#43A047]" />
                 New Diagnosis
               </Button>
               <Button
                 variant={activeTab === 'history' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setActiveTab('history')}
-                className={`flex-1 ${activeTab === 'history' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`} // Primary Blue, White, Dark Gray, Light Gray
+                className={`flex-1 ${activeTab === 'history' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`}
               >
-                <Shield className="h-4 w-4 mr-2 text-[#43A047]" /> {/* Secondary Green */}
+                <Shield className="h-4 w-4 mr-2 text-[#43A047]" />
                 History
               </Button>
             </div>
@@ -218,13 +217,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Status Bar */}
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center space-x-2 text-sm text-[#616161] bg-[#FFFFFF] px-4 py-2 rounded-full shadow-sm border-[#E0E0E0]"> {/* Medium Gray, White, Light Gray */}
-            <div className="w-2 h-2 bg-[#4CAF50] rounded-full animate-pulse"></div> {/* Success Green */}
-            <span>AI Assistant Ready • Secure Connection • HIPAA Compliant</span>
-          </div>
-        </div>
       </main>
     </div>
   );
