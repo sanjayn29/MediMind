@@ -114,15 +114,6 @@ const Dashboard = () => {
                 <span>About</span>
               </Button>
               <Button
-                onClick={() => navigate('/SymptomCollector')}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2 border-[#E0E0E0] text-[#212121] hover:bg-[#F5F9FC]" // Light Gray, Dark Gray, Light Background
-              >
-                <Info className="h-4 w-4 text-[#1E88E5]" /> {/* Primary Blue */}
-                <span>About</span>
-              </Button>
-              <Button
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
