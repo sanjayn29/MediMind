@@ -69,7 +69,8 @@ export const MedicalChat = () => {
       toast({
         title: "Chat Error",
         description: "Unable to send message. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
 
       const errorMessage: ChatMessageDisplay = {
@@ -97,54 +98,57 @@ export const MedicalChat = () => {
   };
 
   return (
-    <Card className="p-6 shadow-card h-[600px] flex flex-col">
+    <Card className="p-6 shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl h-[600px] flex flex-col">
       <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2 bg-gradient-primary rounded-lg">
-          <MessageSquare className="h-5 w-5 text-primary-foreground" />
+        <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+          <MessageSquare className="h-5 w-5 text-[#1E88E5]" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Medical Chat Assistant</h3>
-          <p className="text-sm text-muted-foreground">AI-powered medical consultation</p>
+          <h3 className="text-lg font-semibold text-[#212121]">Medical Chat Assistant</h3>
+          <p className="text-sm text-[#616161]">AI-powered medical consultation</p>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+      <div className="flex-1 overflow-y-auto space-y-6 mb-6">
         {messages.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>Start a conversation about your symptoms</p>
-            <p className="text-xs mt-2">Ask me about any medical concerns</p>
+          <div className="text-center py-12 text-[#616161]">
+            <Bot className="h-14 w-14 mx-auto mb-4 text-[#1E88E5] opacity-70" />
+            <p className="text-base font-medium text-[#212121]">Start a conversation about your symptoms</p>
+            <p className="text-sm mt-2">Ask me about any medical concerns</p>
           </div>
         ) : (
           messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'} mb-4`}
             >
               <div
-                className={`max-w-[80%] p-3 rounded-lg ${
+                className={`max-w-[80%] p-4 rounded-2xl shadow-sm transition-all duration-200 ${
                   msg.isUser
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted'
+                    ? 'bg-[#1E88E5] text-[#FFFFFF]'
+                    : 'bg-[#F5F9FC] text-[#212121] border-[#E0E0E0]'
                 }`}
               >
-                <div className="flex items-start space-x-2">
+                <div className="flex items-start space-x-3">
                   {!msg.isUser && (
-                    <Bot className="h-4 w-4 mt-1 flex-shrink-0" />
+                    <Bot className="h-5 w-5 mt-1 flex-shrink-0 text-[#43A047]" />
                   )}
                   <div className="flex-1">
-                    <p className="text-sm">{msg.message}</p>
+                    <p className="text-base leading-relaxed">{msg.message}</p>
                     {msg.confidence && !msg.isUser && (
-                      <div className="mt-2">
-                        <Badge variant="outline" className="text-xs">
+                      <div className="mt-3">
+                        <Badge 
+                          variant="outline" 
+                          className="text-xs bg-[#F5F9FC] text-[#616161] border-[#E0E0E0] px-3 py-1"
+                        >
                           Confidence: {msg.confidence.toFixed(1)}%
                         </Badge>
                       </div>
                     )}
                     {msg.suggestions && msg.suggestions.length > 0 && (
-                      <div className="mt-3 space-y-2">
-                        <p className="text-xs font-medium text-muted-foreground">
+                      <div className="mt-4 space-y-3">
+                        <p className="text-xs font-medium text-[#616161] opacity-80">
                           Suggested follow-up questions:
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -153,7 +157,7 @@ export const MedicalChat = () => {
                               key={index}
                               variant="outline"
                               size="sm"
-                              className="text-xs h-auto py-1 px-2"
+                              className="text-xs h-auto py-1.5 px-3 bg-[#FFFFFF] text-[#1E88E5] border-[#E0E0E0] hover:bg-[#F5F9FC] hover:text-[#43A047] transition-colors duration-200 rounded-lg"
                               onClick={() => useSuggestion(suggestion)}
                             >
                               {suggestion}
@@ -164,10 +168,10 @@ export const MedicalChat = () => {
                     )}
                   </div>
                   {msg.isUser && (
-                    <User className="h-4 w-4 mt-1 flex-shrink-0" />
+                    <User className="h-5 w-5 mt-1 flex-shrink-0 text-[#FFFFFF]" />
                   )}
                 </div>
-                <div className="text-xs opacity-70 mt-1">
+                <div className="text-xs text-[#616161] opacity-70 mt-2">
                   {msg.timestamp.toLocaleTimeString()}
                 </div>
               </div>
@@ -177,10 +181,10 @@ export const MedicalChat = () => {
         
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-muted p-3 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">AI is thinking...</span>
+            <div className="bg-[#F5F9FC] p-4 rounded-2xl shadow-sm border-[#E0E0E0]">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="h-5 w-5 animate-spin text-[#43A047]" />
+                <span className="text-base text-[#616161]">AI is thinking...</span>
               </div>
             </div>
           </div>
@@ -190,29 +194,29 @@ export const MedicalChat = () => {
       </div>
 
       {/* Input Area */}
-      <div className="flex space-x-2">
+      <div className="flex space-x-3">
         <Textarea
           placeholder="Describe your symptoms or ask a medical question..."
           value={currentMessage}
           onChange={(e) => setCurrentMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="flex-1 min-h-[60px] max-h-[120px] resize-none"
+          className="flex-1 min-h-[60px] max-h-[120px] resize-none border-[#E0E0E0] focus:ring-2 focus:ring-[#1E88E5] rounded-lg bg-[#F5F9FC] text-[#212121] text-base p-3"
           disabled={isLoading}
         />
         <Button
           onClick={sendMessage}
-          variant="medical"
+          variant="default"
           size="icon"
           disabled={!currentMessage.trim() || isLoading}
-          className="h-[60px] w-[60px]"
+          className="bg-[#1E88E5] hover:bg-[#43A047] h-[60px] w-[60px] rounded-lg text-[#FFFFFF] shadow-sm"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           )}
         </Button>
       </div>
     </Card>
   );
-}; 
+};

@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useVoiceInput } from '@/hooks/use-voice-input';
 import { apiService } from '@/lib/api';
 import { saveDiagnosis } from '@/lib/firestore';
-import { Plus, X, Loader2, Mic, Send } from 'lucide-react';
+import { Plus, X, Loader2, Mic, MicOff, Send } from 'lucide-react';
 
 interface DiagnosisFormProps {
   userId: string;
@@ -17,16 +18,34 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [currentSymptom, setCurrentSymptom] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const { toast } = useToast();
+  
+  // Voice input hook
+  const {
+    isListening,
+    isSupported,
+    startListening,
+    stopListening,
+    transcript,
+    resetTranscript
+  } = useVoiceInput();
+
+  // Update current symptom when transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setCurrentSymptom(transcript);
+    }
+  }, [transcript]);
 
   const addSymptom = () => {
     if (currentSymptom.trim() && !symptoms.includes(currentSymptom.trim())) {
       setSymptoms([...symptoms, currentSymptom.trim()]);
       setCurrentSymptom('');
+      resetTranscript();
       toast({
         title: "Symptom Added",
-        description: "Symptom has been recorded successfully."
+        description: "Symptom has been recorded successfully.",
+        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
       });
     }
   };
@@ -35,12 +54,30 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
     setSymptoms(symptoms.filter((_, i) => i !== index));
   };
 
-  const toggleVoiceRecording = () => {
-    setIsListening(!isListening);
-    if (!isListening) {
+  const toggleVoiceRecording = async () => {
+    try {
+      if (isListening) {
+        stopListening();
+        toast({
+          title: "Voice Recording Stopped",
+          description: "Voice recording has been stopped.",
+          style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+        });
+      } else {
+        await startListening();
+        toast({
+          title: "Voice Recording Started",
+          description: "Start describing your symptoms. Click the microphone again to stop.",
+          style: { background: '#00ACC1', color: '#FFFFFF' } // Info Cyan
+        });
+      }
+    } catch (error) {
+      console.error('Voice recording error:', error);
       toast({
-        title: "Voice Recording",
-        description: "Listening for symptoms... (Demo mode)"
+        title: "Voice Recording Error",
+        description: "Unable to start voice recording. Please check your microphone permissions.",
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     }
   };
@@ -50,7 +87,8 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
       toast({
         title: "No Symptoms",
         description: "Please add symptoms before processing.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
       return;
     }
@@ -74,7 +112,8 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
       if (saveResult.success) {
         toast({
           title: "Diagnosis Complete",
-          description: `Found ${response.diagnoses.length} potential diagnoses with ${response.confidence_score.toFixed(1)}% confidence.`
+          description: `Found ${response.diagnoses.length} potential diagnoses with ${response.confidence_score.toFixed(1)}% confidence.`,
+          style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
         });
 
         // Pass diagnosis data to parent component
@@ -89,7 +128,8 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
         toast({
           title: "Save Failed",
           description: "Diagnosis completed but failed to save to history.",
-          variant: "destructive"
+          variant: "destructive",
+          style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
         });
       }
     } catch (error) {
@@ -97,7 +137,8 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
       toast({
         title: "Analysis Failed",
         description: "Unable to process symptoms. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     } finally {
       setIsProcessing(false);
@@ -105,25 +146,30 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
   };
 
   return (
-    <Card className="shadow-lg border-0">
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Plus className="h-5 w-5 text-blue-600" />
+    <Card className="shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
+      <CardHeader className="bg-[#F5F9FC] rounded-t-2xl p-6">
+        <CardTitle className="flex items-center space-x-2 text-[#212121]">
+          <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+            <Plus className="h-5 w-5 text-[#1E88E5]" />
           </div>
-          <span>Symptom Collector</span>
+          <span className="text-lg font-semibold">Symptom Collector</span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-[#616161]">
           Describe your symptoms to get an AI-powered diagnosis
+          {isSupported && (
+            <span className="block text-xs text-[#1E88E5] mt-1">
+              💡 Use the microphone button for voice input
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex space-x-2">
+      <CardContent className="space-y-4 p-6">
+        <div className="flex space-x-3">
           <Textarea
             placeholder="Describe your symptoms (e.g., 'Severe headache for 3 days, nausea, sensitivity to light')"
             value={currentSymptom}
             onChange={(e) => setCurrentSymptom(e.target.value)}
-            className="flex-1 min-h-[80px]"
+            className="flex-1 min-h-[80px] bg-[#F5F9FC] border-[#E0E0E0] focus:ring-2 focus:ring-[#1E88E5] text-[#212121] rounded-lg"
             onKeyPress={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -131,39 +177,59 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
               }
             }}
           />
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-3">
             <Button
               onClick={addSymptom}
-              variant="outline"
+              variant="default"
               size="icon"
               disabled={!currentSymptom.trim()}
+              className="bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] h-[48px] w-[48px] rounded-lg shadow-sm"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-5 w-5" />
             </Button>
-            <Button
-              onClick={toggleVoiceRecording}
-              variant={isListening ? "destructive" : "outline"}
-              size="icon"
-            >
-              <Mic className={`h-4 w-4 ${isListening ? 'animate-pulse' : ''}`} />
-            </Button>
+            {isSupported && (
+              <Button
+                onClick={toggleVoiceRecording}
+                variant={isListening ? "destructive" : "outline"}
+                size="icon"
+                className={`h-[48px] w-[48px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
+              >
+                {isListening ? (
+                  <MicOff className="h-5 w-5 animate-pulse" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
+              </Button>
+            )}
           </div>
         </div>
 
+        {/* Voice Input Status */}
+        {isListening && (
+          <div className="p-3 bg-[#F5F9FC] rounded-lg border border-[#E0E0E0]">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-[#E53935] rounded-full animate-pulse"></div>
+              <span className="text-sm text-[#1E88E5]">
+                Listening... {transcript && `"${transcript}"`}
+              </span>
+            </div>
+          </div>
+        )}
+
         {symptoms.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-medium text-sm text-gray-700">Recorded Symptoms:</h4>
+            <h4 className="font-medium text-sm text-[#212121]">Recorded Symptoms:</h4>
             <div className="flex flex-wrap gap-2">
               {symptoms.map((symptom, index) => (
                 <Badge
                   key={index}
-                  variant="secondary"
-                  className="py-1 px-3 bg-blue-50 text-blue-700 border-blue-200"
+                  variant="outline"
+                  className="py-1 px-3 bg-[#F5F9FC] text-[#212121] border-[#E0E0E0]"
                 >
                   {symptom}
                   <button
                     onClick={() => removeSymptom(index)}
-                    className="ml-2 text-blue-500 hover:text-blue-700"
+                    className="ml-2 text-[#616161] hover:text-[#E53935]"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -172,17 +238,18 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
             </div>
             <Button 
               onClick={processDiagnosis}
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              variant="default"
+              className="w-full bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] rounded-lg shadow-sm"
               disabled={isProcessing}
             >
               {isProcessing ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                   Analyzing Symptoms...
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4 mr-2" />
+                  <Send className="h-5 w-5 mr-2" />
                   Get Diagnosis ({symptoms.length} symptoms)
                 </>
               )}
@@ -192,4 +259,4 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
       </CardContent>
     </Card>
   );
-}; 
+};

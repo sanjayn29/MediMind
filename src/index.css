@@ -123,3 +123,29 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .bg-gradient-background {
+    background: var(--gradient-background);
+  }
+  
+  .shadow-medical {
+    box-shadow: var(--shadow-medical);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .font-medical {
+    font-family: var(--font-medical);
+  }
+}

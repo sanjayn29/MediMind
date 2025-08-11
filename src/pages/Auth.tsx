@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { signIn, signUp } from '@/lib/auth';
 import { Heart, Stethoscope } from 'lucide-react';
@@ -26,7 +26,7 @@ const Auth = () => {
     confirmPassword: ''
   });
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -35,21 +35,23 @@ const Auth = () => {
     if (result.success) {
       toast({
         title: "Login Successful",
-        description: "Welcome to Medical Diagnosis Assistant"
+        description: "Welcome to Medical Diagnosis Assistant",
+        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
       });
       navigate('/dashboard');
     } else {
       toast({
         title: "Login Failed",
         description: result.error,
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     }
     
     setIsLoading(false);
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -57,7 +59,8 @@ const Auth = () => {
       toast({
         title: "Passwords Don't Match",
         description: "Please make sure your passwords match",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
       setIsLoading(false);
       return;
@@ -68,14 +71,16 @@ const Auth = () => {
     if (result.success) {
       toast({
         title: "Account Created",
-        description: "Welcome to Medical Diagnosis Assistant"
+        description: "Welcome to Medical Diagnosis Assistant",
+        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
       });
       navigate('/dashboard');
     } else {
       toast({
         title: "Signup Failed",
         description: result.error,
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     }
     
@@ -83,41 +88,49 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F5F9FC] via-[#FFFFFF] to-[#F5F9FC] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Heart className="h-8 w-8 text-blue-600" />
-            <Stethoscope className="h-8 w-8 text-green-600" />
+            <Heart className="h-8 w-8 text-[#1E88E5]" /> {/* Primary Blue */}
+            <Stethoscope className="h-8 w-8 text-[#43A047]" /> {/* Secondary Green */}
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-[#212121] mb-2"> {/* Dark Gray */}
             Medical Diagnosis Assistant
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#616161]"> {/* Medium Gray */}
             AI-powered healthcare diagnosis and consultation
           </p>
         </div>
 
         {/* Auth Card */}
-        <Card className="shadow-xl border-0">
+        <Card className="shadow-xl border-[#E0E0E0]"> {/* Light Gray */}
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl text-[#212121]"> {/* Dark Gray */}
+              Welcome
+            </CardTitle>
+            <CardDescription className="text-[#616161]"> {/* Medium Gray */}
               Sign in to your account or create a new one
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 bg-[#F5F9FC]"> {/* Light Background */}
+                <TabsTrigger value="login" className="data-[state=active]:bg-[#1E88E5] data-[state=active]:text-[#FFFFFF]">
+                  Login
+                </TabsTrigger>
+                <TabsTrigger value="signup" className="data-[state=active]:bg-[#1E88E5] data-[state=active]:text-[#FFFFFF]">
+                  Sign Up
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="login" className="space-y-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email" className="text-[#212121]"> {/* Dark Gray */}
+                      Email
+                    </Label>
                     <Input
                       id="login-email"
                       type="email"
@@ -125,10 +138,13 @@ const Auth = () => {
                       value={loginData.email}
                       onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                       required
+                      className="border-[#E0E0E0]" // Light Gray
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password" className="text-[#212121]"> {/* Dark Gray */}
+                      Password
+                    </Label>
                     <Input
                       id="login-password"
                       type="password"
@@ -136,9 +152,14 @@ const Auth = () => {
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                       required
+                      className="border-[#E0E0E0]" // Light Gray
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-[#1E88E5] text-[#FFFFFF] hover:bg-[#43A047]" // Primary Blue, hover Secondary Green
+                    disabled={isLoading}
+                  >
                     {isLoading ? 'Signing In...' : 'Sign In'}
                   </Button>
                 </form>
@@ -147,7 +168,9 @@ const Auth = () => {
               <TabsContent value="signup" className="space-y-4">
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email" className="text-[#212121]"> {/* Dark Gray */}
+                      Email
+                    </Label>
                     <Input
                       id="signup-email"
                       type="email"
@@ -155,10 +178,13 @@ const Auth = () => {
                       value={signupData.email}
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                       required
+                      className="border-[#E0E0E0]" // Light Gray
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password" className="text-[#212121]"> {/* Dark Gray */}
+                      Password
+                    </Label>
                     <Input
                       id="signup-password"
                       type="password"
@@ -166,10 +192,13 @@ const Auth = () => {
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                       required
+                      className="border-[#E0E0E0]" // Light Gray
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-confirm-password">Confirm Password</Label>
+                    <Label htmlFor="signup-confirm-password" className="text-[#212121]"> {/* Dark Gray */}
+                      Confirm Password
+                    </Label>
                     <Input
                       id="signup-confirm-password"
                       type="password"
@@ -177,9 +206,14 @@ const Auth = () => {
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                       required
+                      className="border-[#E0E0E0]" // Light Gray
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-[#1E88E5] text-[#FFFFFF] hover:bg-[#43A047]" // Primary Blue, hover Secondary Green
+                    disabled={isLoading}
+                  >
                     {isLoading ? 'Creating Account...' : 'Create Account'}
                   </Button>
                 </form>
@@ -189,7 +223,7 @@ const Auth = () => {
         </Card>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500">
+        <div className="text-center mt-8 text-sm text-[#616161]"> {/* Medium Gray */}
           <p>Secure • HIPAA Compliant • AI-Powered</p>
         </div>
       </div>
@@ -197,4 +231,4 @@ const Auth = () => {
   );
 };
 
-export default Auth; 
+export default Auth;

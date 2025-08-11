@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Search, AlertCircle, CheckCircle, Info, Loader2, Plus, X } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { SymptomSuggestions } from './SymptomSuggestions';
+import { useVoiceInput } from '@/hooks/use-voice-input';
+import { Search, AlertCircle, CheckCircle, Info, Loader2, Plus, X, Mic, MicOff } from 'lucide-react';
 
 interface DiseaseData {
   Disease: string;
@@ -41,7 +41,7 @@ interface PredictionResult {
   description: string;
 }
 
-export const DiseasePredictor = () => {
+export const DiseasePredictionInput = () => {
   const [symptoms, setSymptoms] = useState<string>('');
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [diseaseData, setDiseaseData] = useState<DiseaseData[]>([]);
@@ -50,6 +50,23 @@ export const DiseasePredictor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const { toast } = useToast();
+  
+  // Voice input hook
+  const {
+    isListening,
+    isSupported,
+    startListening,
+    stopListening,
+    transcript,
+    resetTranscript
+  } = useVoiceInput();
+
+  // Update symptoms when transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setSymptoms(transcript);
+    }
+  }, [transcript]);
 
   // Load dataset on component mount
   useEffect(() => {
@@ -106,20 +123,22 @@ export const DiseasePredictor = () => {
           };
         });
 
-             setDiseaseData(parsedDiseaseData);
+      setDiseaseData(parsedDiseaseData);
       setDiseaseDescriptions(parsedDescriptions);
       setIsDataLoaded(true);
       
       toast({
         title: "Dataset Loaded",
-        description: `Loaded ${parsedDiseaseData.length} disease records and ${parsedDescriptions.length} descriptions.`
+        description: `Loaded ${parsedDiseaseData.length} disease records and ${parsedDescriptions.length} descriptions.`,
+        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
       });
     } catch (error) {
       console.error('Error loading dataset:', error);
       toast({
         title: "Dataset Error",
         description: "Failed to load disease dataset. Please check if the dataset files are available.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     }
   };
@@ -129,7 +148,8 @@ export const DiseasePredictor = () => {
       toast({
         title: "No Symptoms",
         description: "Please enter symptoms to predict disease.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
       return;
     }
@@ -188,13 +208,15 @@ export const DiseasePredictor = () => {
     if (results.length > 0) {
       toast({
         title: "Prediction Complete",
-        description: `Found ${results.length} potential diseases with highest confidence: ${results[0].confidence}%`
+        description: `Found ${results.length} potential diseases with highest confidence: ${results[0].confidence}%`,
+        style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
       });
     } else {
       toast({
         title: "No Matches",
         description: "No diseases found matching the provided symptoms.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     }
   };
@@ -203,13 +225,7 @@ export const DiseasePredictor = () => {
     setPredictions([]);
     setSymptoms('');
     setSelectedSymptoms([]);
-  };
-
-  const handleSymptomSelect = (symptom: string) => {
-    if (!selectedSymptoms.includes(symptom)) {
-      setSelectedSymptoms([...selectedSymptoms, symptom]);
-      setSymptoms(prev => prev ? `${prev}, ${symptom}` : symptom);
-    }
+    resetTranscript();
   };
 
   const removeSymptom = (symptomToRemove: string) => {
@@ -217,63 +233,122 @@ export const DiseasePredictor = () => {
     setSymptoms(selectedSymptoms.filter(s => s !== symptomToRemove).join(', '));
   };
 
+  const toggleVoiceInput = async () => {
+    try {
+      if (isListening) {
+        stopListening();
+        toast({
+          title: "Voice Input Stopped",
+          description: "Voice recording has been stopped.",
+          style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+        });
+      } else {
+        await startListening();
+        toast({
+          title: "Voice Input Started",
+          description: "Start describing your symptoms. Click the microphone again to stop.",
+          style: { background: '#00ACC1', color: '#FFFFFF' } // Info Cyan
+        });
+      }
+    } catch (error) {
+      console.error('Voice input error:', error);
+      toast({
+        title: "Voice Input Error",
+        description: "Unable to start voice input. Please check your microphone permissions.",
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
+      });
+    }
+  };
+
   return (
-    <Card className="p-6 shadow-card">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2 bg-gradient-primary rounded-lg">
-          <Search className="h-5 w-5 text-primary-foreground" />
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold text-foreground">Disease Predictor</h3>
-          <p className="text-sm text-muted-foreground">Enter symptoms to predict possible diseases</p>
-        </div>
-      </div>
+    <Card className="shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
+      <CardHeader className="bg-[#F5F9FC] p-6 rounded-t-2xl">
+        <CardTitle className="flex items-center space-x-2 text-[#212121]">
+          <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+            <Search className="h-5 w-5 text-[#1E88E5]" />
+          </div>
+          <span className="text-lg font-semibold">Dataset Disease Predictor</span>
+        </CardTitle>
+        <CardDescription className="text-[#616161]">
+          Enter symptoms to predict diseases using our comprehensive medical dataset (41 diseases, 132+ symptoms)
+          {isSupported && (
+            <span className="block text-xs text-[#1E88E5] mt-1">
+              💡 Use the microphone button for voice input
+            </span>
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4 p-6">
+        {!isDataLoaded && (
+          <Alert className="border-[#E0E0E0] bg-[#F5F9FC]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#1E88E5]" />
+            <AlertDescription className="text-[#616161]">
+              Loading disease dataset...
+            </AlertDescription>
+          </Alert>
+        )}
 
-      {!isDataLoaded && (
-        <Alert className="mb-4">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <AlertDescription>
-            Loading disease dataset...
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
+          <label className="text-sm font-medium text-[#212121]">
             Enter Symptoms
           </label>
-          <Input
-            placeholder="e.g., fever, cough, headache, fatigue"
-            value={symptoms}
-            onChange={(e) => setSymptoms(e.target.value)}
-            className="bg-muted/50"
-          />
-          <p className="text-xs text-muted-foreground">
-            Type symptoms or use the symptom browser below. The system will match against a database of 41 diseases.
+          <div className="flex space-x-3">
+            <Input
+              placeholder="e.g., fever, cough, headache, fatigue"
+              value={symptoms}
+              onChange={(e) => setSymptoms(e.target.value)}
+              className="flex-1 bg-[#F5F9FC] border-[#E0E0E0] focus:ring-2 focus:ring-[#1E88E5] text-[#212121] rounded-lg"
+            />
+            {isSupported && (
+              <Button
+                onClick={toggleVoiceInput}
+                variant={isListening ? "destructive" : "outline"}
+                size="icon"
+                className={`h-[40px] w-[40px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
+              >
+                {isListening ? (
+                  <MicOff className="h-5 w-5 animate-pulse" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-[#616161]">
+            Type symptoms separated by commas. The system will match against a database of 41 diseases.
           </p>
         </div>
 
-        {/* Symptom Suggestions */}
-        <SymptomSuggestions onSymptomSelect={handleSymptomSelect} />
+        {/* Voice Input Status */}
+        {isListening && (
+          <div className="p-3 bg-[#F5F9FC] rounded-lg border border-[#E0E0E0]">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-[#E53935] rounded-full animate-pulse"></div>
+              <span className="text-sm text-[#1E88E5]">
+                Listening... {transcript && `"${transcript}"`}
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Selected Symptoms Display */}
         {selectedSymptoms.length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
+            <label className="text-sm font-medium text-[#212121]">
               Selected Symptoms:
             </label>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map((symptom, index) => (
                 <Badge
                   key={index}
-                  variant="default"
-                  className="py-1 px-3 bg-primary/10 border-primary/20"
+                  variant="outline"
+                  className="py-1 px-3 bg-[#F5F9FC] text-[#212121] border-[#E0E0E0]"
                 >
                   {symptom}
                   <button
                     onClick={() => removeSymptom(symptom)}
-                    className="ml-2 text-muted-foreground hover:text-destructive"
+                    className="ml-2 text-[#616161] hover:text-[#E53935]"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -283,25 +358,31 @@ export const DiseasePredictor = () => {
           </div>
         )}
 
-        <div className="flex space-x-2">
+        <div className="flex space-x-3">
           <Button
             onClick={predictDisease}
-            variant="medical"
-            className="flex-1"
+            variant="default"
+            className="flex-1 bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] rounded-lg shadow-sm"
             disabled={!isDataLoaded || isLoading || !symptoms.trim()}
           >
             {isLoading ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <>
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                Analyzing...
+              </>
             ) : (
-              <Search className="h-4 w-4 mr-2" />
+              <>
+                <Search className="h-5 w-5 mr-2" />
+                Predict Disease
+              </>
             )}
-            {isLoading ? 'Analyzing...' : 'Predict Disease'}
           </Button>
           {predictions.length > 0 && (
             <Button
               onClick={clearResults}
               variant="outline"
               size="sm"
+              className="border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC] hover:text-[#43A047] rounded-lg shadow-sm"
             >
               Clear
             </Button>
@@ -311,39 +392,39 @@ export const DiseasePredictor = () => {
         {predictions.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <h4 className="font-medium text-foreground">Prediction Results</h4>
+              <CheckCircle className="h-4 w-4 text-[#4CAF50]" />
+              <h4 className="font-medium text-[#212121]">Prediction Results</h4>
             </div>
             
             <div className="space-y-3">
               {predictions.map((prediction, index) => (
-                <Card key={index} className="p-4 border-l-4 border-l-primary">
+                <Card key={index} className="p-4 border-l-4 border-l-[#1E88E5] bg-[#FFFFFF] shadow-sm rounded-lg">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h5 className="font-semibold text-foreground">
+                      <h5 className="font-semibold text-[#212121]">
                         {prediction.disease}
                       </h5>
                       <Badge 
-                        variant={prediction.confidence > 70 ? "default" : "secondary"}
-                        className="mt-1"
+                        variant={prediction.confidence > 70 ? "default" : "outline"}
+                        className={`mt-1 ${prediction.confidence > 70 ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]'}`}
                       >
                         {prediction.confidence}% Confidence
                       </Badge>
                     </div>
                   </div>
                   
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="text-sm text-[#616161] mb-3">
                     {prediction.description}
                   </p>
                   
                   {prediction.matchingSymptoms.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium text-foreground mb-1">
+                      <p className="text-xs font-medium text-[#212121] mb-1">
                         Matching Symptoms:
                       </p>
                       <div className="flex flex-wrap gap-1">
                         {prediction.matchingSymptoms.map((symptom, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs">
+                          <Badge key={idx} variant="outline" className="text-xs bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]">
                             {symptom}
                           </Badge>
                         ))}
@@ -357,15 +438,15 @@ export const DiseasePredictor = () => {
         )}
 
         {isDataLoaded && (
-          <Alert>
-            <Info className="h-4 w-4" />
-            <AlertDescription>
+          <Alert className="border-[#E0E0E0] bg-[#F5F9FC]">
+            <Info className="h-4 w-4 text-[#00ACC1]" />
+            <AlertDescription className="text-[#616161]">
               Dataset contains 41 diseases with symptom mappings. 
               This is for educational purposes only and should not replace professional medical advice.
             </AlertDescription>
           </Alert>
         )}
-      </div>
+      </CardContent>
     </Card>
   );
-}; 
+};

@@ -39,7 +39,8 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
         toast({
           title: "Failed to Load History",
           description: result.error,
-          variant: "destructive"
+          variant: "destructive",
+          style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
         });
       }
     } catch (error) {
@@ -47,7 +48,8 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
       toast({
         title: "Error",
         description: "Failed to load diagnosis history",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
     } finally {
       setIsLoading(false);
@@ -57,15 +59,15 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
   const getRiskLevelColor = (riskLevel: string) => {
     switch (riskLevel.toLowerCase()) {
       case 'critical':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-[#E53935] text-[#FFFFFF] border-[#E53935]/50'; // Warning/Alert Red
       case 'high':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-[#FF8A65] text-[#FFFFFF] border-[#FF8A65]/50'; // Lighter red-orange for high risk
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-[#4CAF50]/20 text-[#4CAF50] border-[#4CAF50]/50'; // Success Green (lighter)
       case 'low':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-[#4CAF50]/10 text-[#4CAF50] border-[#4CAF50]/30'; // Success Green (very light)
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]'; // Light Background
     }
   };
 
@@ -94,19 +96,19 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
 
   if (isLoading) {
     return (
-      <Card className="shadow-lg border-0">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <History className="h-5 w-5 text-green-600" />
+      <Card className="shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
+        <CardHeader className="bg-[#F5F9FC] rounded-t-2xl">
+          <CardTitle className="flex items-center space-x-2 text-[#212121]">
+            <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+              <History className="h-5 w-5 text-[#1E88E5]" />
             </div>
-            <span>Diagnosis History</span>
+            <span className="text-lg font-semibold">Diagnosis History</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
-          <div className="flex items-center space-x-2">
-            <Loader2 className="h-5 w-5 animate-spin text-green-600" />
-            <span>Loading history...</span>
+          <div className="flex items-center space-x-2 text-[#616161]">
+            <Loader2 className="h-5 w-5 animate-spin text-[#1E88E5]" />
+            <span className="text-base">Loading history...</span>
           </div>
         </CardContent>
       </Card>
@@ -114,23 +116,23 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
   }
 
   return (
-    <Card className="shadow-lg border-0">
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <div className="p-2 bg-green-100 rounded-lg">
-            <History className="h-5 w-5 text-green-600" />
+    <Card className="shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
+      <CardHeader className="bg-[#F5F9FC] rounded-t-2xl">
+        <CardTitle className="flex items-center space-x-2 text-[#212121]">
+          <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+            <History className="h-5 w-5 text-[#1E88E5]" />
           </div>
-          <span>Diagnosis History</span>
+          <span className="text-lg font-semibold">Diagnosis History</span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-[#616161]">
           Your previous diagnoses and medical consultations
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-6">
         {diagnoses.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="font-medium">No diagnosis history</p>
+          <div className="text-center py-8 text-[#616161]">
+            <History className="h-12 w-12 mx-auto mb-4 text-[#1E88E5] opacity-70" />
+            <p className="font-medium text-[#212121] text-base">No diagnosis history</p>
             <p className="text-sm mt-2">Your diagnoses will appear here after you complete your first assessment</p>
           </div>
         ) : (
@@ -138,13 +140,13 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
             {diagnoses.map((diagnosis) => (
               <div
                 key={diagnosis.id}
-                className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="border border-[#E0E0E0] rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">
+                    <Calendar className="h-4 w-4 text-[#616161]" />
+                    <span className="text-sm text-[#616161]">
                       {formatDate(diagnosis.timestamp)}
                     </span>
                   </div>
@@ -158,10 +160,10 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
 
                 {/* Symptoms */}
                 <div className="mb-3">
-                  <h4 className="font-medium text-sm text-gray-700 mb-2">Symptoms:</h4>
+                  <h4 className="font-medium text-sm text-[#212121] mb-2">Symptoms:</h4>
                   <div className="flex flex-wrap gap-1">
                     {diagnosis.symptoms.map((symptom, index) => (
-                      <Badge key={index} variant="outline" className="text-xs bg-blue-50 text-blue-700">
+                      <Badge key={index} variant="outline" className="text-xs bg-[#F5F9FC] text-[#212121] border-[#E0E0E0]">
                         {symptom}
                       </Badge>
                     ))}
@@ -170,12 +172,12 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
 
                 {/* Diagnoses */}
                 <div className="mb-3">
-                  <h4 className="font-medium text-sm text-gray-700 mb-2">Diagnoses:</h4>
+                  <h4 className="font-medium text-sm text-[#212121] mb-2">Diagnoses:</h4>
                   <div className="space-y-2">
                     {diagnosis.diagnoses.slice(0, 3).map((diag, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <span className="text-sm font-medium">{diag.name}</span>
-                        <Badge variant="secondary" className="text-xs">
+                      <div key={index} className="flex items-center justify-between p-2 bg-[#F5F9FC] rounded-lg border-[#E0E0E0]">
+                        <span className="text-sm font-medium text-[#212121]">{diag.name}</span>
+                        <Badge variant="outline" className="text-xs bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]">
                           {diag.probability}%
                         </Badge>
                       </div>
@@ -186,11 +188,11 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
                 {/* Recommendations */}
                 {diagnosis.recommendations.length > 0 && (
                   <div className="mb-3">
-                    <h4 className="font-medium text-sm text-gray-700 mb-2">Recommendations:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
+                    <h4 className="font-medium text-sm text-[#212121] mb-2">Recommendations:</h4>
+                    <ul className="text-sm text-[#616161] space-y-1">
                       {diagnosis.recommendations.slice(0, 2).map((rec, index) => (
                         <li key={index} className="flex items-start space-x-2">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-[#4CAF50] mt-1">•</span>
                           <span>{rec}</span>
                         </li>
                       ))}
@@ -199,9 +201,9 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
                 )}
 
                 {/* Confidence Score */}
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <span className="text-xs text-gray-500">Confidence Score</span>
-                  <Badge variant="outline" className="text-xs">
+                <div className="flex items-center justify-between pt-2 border-t border-[#E0E0E0]">
+                  <span className="text-xs text-[#616161]">Confidence Score</span>
+                  <Badge variant="outline" className="text-xs bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]">
                     {diagnosis.confidenceScore.toFixed(1)}%
                   </Badge>
                 </div>
@@ -214,17 +216,17 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
           <Button
             onClick={loadDiagnosisHistory}
             variant="outline"
-            className="w-full"
+            className="w-full border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC] hover:text-[#43A047] rounded-lg shadow-sm"
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className="h-4 w-4 mr-2 animate-spin text-[#1E88E5]" />
                 Refreshing...
               </>
             ) : (
               <>
-                <History className="h-4 w-4 mr-2" />
+                <History className="h-4 w-4 mr-2 text-[#1E88E5]" />
                 Refresh History
               </>
             )}
@@ -233,4 +235,4 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
       </CardContent>
     </Card>
   );
-}; 
+};

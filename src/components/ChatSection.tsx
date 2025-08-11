@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useVoiceInput } from '@/hooks/use-voice-input';
 import { apiService } from '@/lib/api';
-import { MessageSquare, Send, Loader2, Bot, User, Sparkles } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Bot, User, Sparkles, Mic, MicOff } from 'lucide-react';
 
 interface ChatMessage {
   id: string;
@@ -22,6 +23,16 @@ export const ChatSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  
+  // Voice input hook
+  const {
+    isListening,
+    isSupported,
+    startListening,
+    stopListening,
+    transcript,
+    resetTranscript
+  } = useVoiceInput();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -30,6 +41,13 @@ export const ChatSection = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Update current message when transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setCurrentMessage(transcript);
+    }
+  }, [transcript]);
 
   const sendMessage = async () => {
     if (!currentMessage.trim() || isLoading) return;
@@ -43,6 +61,7 @@ export const ChatSection = () => {
 
     setMessages(prev => [...prev, userMessage]);
     setCurrentMessage('');
+    resetTranscript();
     setIsLoading(true);
 
     try {
@@ -67,7 +86,8 @@ export const ChatSection = () => {
       toast({
         title: "Chat Error",
         description: "Unable to send message. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
       });
 
       const errorMessage: ChatMessage = {
@@ -94,56 +114,92 @@ export const ChatSection = () => {
     setCurrentMessage(suggestion);
   };
 
+  const toggleVoiceInput = async () => {
+    try {
+      if (isListening) {
+        stopListening();
+        toast({
+          title: "Voice Input Stopped",
+          description: "Voice recording has been stopped.",
+          style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+        });
+      } else {
+        await startListening();
+        toast({
+          title: "Voice Input Started",
+          description: "Start speaking now. Click the microphone again to stop.",
+          style: { background: '#00ACC1', color: '#FFFFFF' } // Info Cyan
+        });
+      }
+    } catch (error) {
+      console.error('Voice input error:', error);
+      toast({
+        title: "Voice Input Error",
+        description: "Unable to start voice input. Please check your microphone permissions.",
+        variant: "destructive",
+        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
+      });
+    }
+  };
+
   return (
-    <Card className="h-full flex flex-col shadow-lg border-0">
-      <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-green-50">
-        <CardTitle className="flex items-center space-x-2">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <MessageSquare className="h-5 w-5 text-blue-600" />
+    <Card className="h-full flex flex-col shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
+      <CardHeader className="border-b-[#E0E0E0] bg-[#F5F9FC] p-4 rounded-t-2xl">
+        <CardTitle className="flex items-center space-x-2 text-[#212121]">
+          <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
+            <MessageSquare className="h-5 w-5 text-[#1E88E5]" />
           </div>
-          <span>AI Medical Assistant</span>
-          <Sparkles className="h-4 w-4 text-green-500" />
+          <span className="text-lg font-semibold">AI Medical Assistant</span>
+          <Sparkles className="h-4 w-4 text-[#43A047]" />
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col p-0">
+      <CardContent className="flex-1 flex flex-col p-0 bg-[#F5F9FC]">
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p className="font-medium">Start a conversation</p>
+            <div className="text-center py-12 text-[#616161]">
+              <Bot className="h-12 w-12 mx-auto mb-4 text-[#1E88E5] opacity-70" />
+              <p className="font-medium text-[#212121] text-base">Start a conversation</p>
               <p className="text-sm mt-2">Ask me about your symptoms or medical concerns</p>
+              {isSupported && (
+                <p className="text-xs mt-2 text-[#1E88E5]">
+                  💡 Try using the microphone button for voice input
+                </p>
+              )}
             </div>
           ) : (
             messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'} mb-4`}
               >
                 <div
-                  className={`max-w-[85%] p-3 rounded-2xl ${
+                  className={`max-w-[80%] p-4 rounded-2xl shadow-sm transition-all duration-200 ${
                     msg.isUser
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-[#1E88E5] text-[#FFFFFF]'
+                      : 'bg-[#FFFFFF] text-[#212121] border-[#E0E0E0]'
                   }`}
                 >
                   <div className="flex items-start space-x-2">
                     {!msg.isUser && (
-                      <Bot className="h-4 w-4 mt-1 flex-shrink-0 text-green-600" />
+                      <Bot className="h-4 w-4 mt-1 flex-shrink-0 text-[#43A047]" />
                     )}
                     <div className="flex-1">
                       <p className="text-sm leading-relaxed">{msg.message}</p>
                       {msg.confidence && !msg.isUser && (
                         <div className="mt-2">
-                          <Badge variant="outline" className="text-xs bg-white/80">
+                          <Badge 
+                            variant="outline" 
+                            className="text-xs bg-[#F5F9FC] text-[#616161] border-[#E0E0E0]"
+                          >
                             Confidence: {msg.confidence.toFixed(1)}%
                           </Badge>
                         </div>
                       )}
                       {msg.suggestions && msg.suggestions.length > 0 && (
                         <div className="mt-3 space-y-2">
-                          <p className="text-xs font-medium opacity-80">
+                          <p className="text-xs font-medium text-[#616161] opacity-80">
                             Suggested questions:
                           </p>
                           <div className="flex flex-wrap gap-2">
@@ -152,7 +208,7 @@ export const ChatSection = () => {
                                 key={index}
                                 variant="outline"
                                 size="sm"
-                                className="text-xs h-auto py-1 px-2 bg-white/90 hover:bg-white"
+                                className="text-xs h-auto py-1 px-3 bg-[#FFFFFF] text-[#1E88E5] border-[#E0E0E0] hover:bg-[#F5F9FC] hover:text-[#43A047] transition-colors duration-200"
                                 onClick={() => useSuggestion(suggestion)}
                               >
                                 {suggestion}
@@ -163,10 +219,10 @@ export const ChatSection = () => {
                       )}
                     </div>
                     {msg.isUser && (
-                      <User className="h-4 w-4 mt-1 flex-shrink-0" />
+                      <User className="h-4 w-4 mt-1 flex-shrink-0 text-[#FFFFFF]" />
                     )}
                   </div>
-                  <div className="text-xs opacity-70 mt-1">
+                  <div className="text-xs text-[#616161] opacity-70 mt-2">
                     {msg.timestamp.toLocaleTimeString()}
                   </div>
                 </div>
@@ -176,10 +232,10 @@ export const ChatSection = () => {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 p-3 rounded-2xl">
+              <div className="bg-[#FFFFFF] p-4 rounded-2xl shadow-sm border-[#E0E0E0]">
                 <div className="flex items-center space-x-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-green-600" />
-                  <span className="text-sm">AI is thinking...</span>
+                  <Loader2 className="h-4 w-4 animate-spin text-[#43A047]" />
+                  <span className="text-sm text-[#616161]">AI is thinking...</span>
                 </div>
               </div>
             </div>
@@ -189,30 +245,60 @@ export const ChatSection = () => {
         </div>
 
         {/* Input Area */}
-        <div className="border-t p-4 bg-gray-50">
-          <div className="flex space-x-2">
+        <div className="border-t-[#E0E0E0] p-4 bg-[#FFFFFF]">
+          <div className="flex space-x-3">
             <Textarea
               placeholder="Describe your symptoms or ask a medical question..."
               value={currentMessage}
               onChange={(e) => setCurrentMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 min-h-[50px] max-h-[100px] resize-none border-0 focus:ring-2 focus:ring-blue-500"
+              className="flex-1 min-h-[50px] max-h-[100px] resize-none border-[#E0E0E0] focus:ring-2 focus:ring-[#1E88E5] rounded-lg bg-[#F5F9FC] text-[#212121]"
               disabled={isLoading}
             />
-            <Button
-              onClick={sendMessage}
-              className="bg-blue-600 hover:bg-blue-700 h-[50px] w-[50px] p-0"
-              disabled={!currentMessage.trim() || isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
+            <div className="flex flex-col space-y-3">
+              {isSupported && (
+                <Button
+                  onClick={toggleVoiceInput}
+                  variant={isListening ? "destructive" : "outline"}
+                  size="icon"
+                  className={`h-[50px] w-[50px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
+                  disabled={isLoading}
+                >
+                  {isListening ? (
+                    <MicOff className="h-5 w-5 animate-pulse" />
+                  ) : (
+                    <Mic className="h-5 w-5" />
+                  )}
+                </Button>
               )}
-            </Button>
+              <Button
+                onClick={sendMessage}
+                variant="default"
+                className="bg-[#1E88E5] hover:bg-[#43A047] h-[50px] w-[50px] p-0 rounded-lg shadow-sm text-[#FFFFFF]"
+                disabled={!currentMessage.trim() || isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
           </div>
+          
+          {/* Voice Input Status */}
+          {isListening && (
+            <div className="mt-2 p-2 bg-[#F5F9FC] rounded-lg border border-[#E0E0E0]">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-[#E53935] rounded-full animate-pulse"></div>
+                <span className="text-sm text-[#1E88E5]">
+                  Listening... {transcript && `"${transcript}"`}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
   );
-}; 
+};
