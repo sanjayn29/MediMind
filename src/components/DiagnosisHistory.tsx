@@ -101,14 +101,17 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
 
   if (isLoading) {
     return (
-      <Card className="shadow-xl border-blue-800/50 bg-blue-50 rounded-2xl">
-        <CardHeader className="bg-blue-50 rounded-t-2xl">
-          <CardTitle className="flex items-center space-x-2 text-gray-900">
-            <div className="p-2.5 bg-blue-50 rounded-lg">
+      <Card className="shadow-xl border-blue-800/50 bg-white rounded-2xl">
+        <CardHeader className="bg-black rounded-t-2xl">
+          <CardTitle className="flex items-center space-x-2 text-white font-bold">
+            <div className="p-2.5 bg-black rounded-lg">
               <History className="h-5 w-5 text-blue-300" />
             </div>
-            <span className="text-lg font-semibold">Diagnosis History</span>
+            <span className="text-lg font-bold">Diagnosis History</span>
           </CardTitle>
+          <CardDescription className="text-white font-bold">
+            Your previous diagnoses and medical consultations
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
           <div className="flex items-center space-x-2 text-gray-600">
@@ -121,15 +124,15 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
   }
 
   return (
-    <Card className="shadow-xl border-blue-800/50 bg-blue-10 rounded-2xl">
-      <CardHeader className="bg-blue-50 rounded-t-2xl">
-        <CardTitle className="flex items-center space-x-2 text-gray-900">
-          <div className="p-2.5 bg-blue-50 rounded-lg">
+    <Card className="shadow-xl border-blue-800/50 bg-white rounded-2xl">
+      <CardHeader className="bg-black rounded-t-2xl">
+        <CardTitle className="flex items-center space-x-2 text-white font-bold">
+          <div className="p-2.5 bg-black rounded-lg">
             <History className="h-5 w-5 text-blue-300" />
           </div>
-          <span className="text-lg font-semibold">Diagnosis History</span>
+          <span className="text-lg font-bold">Diagnosis History</span>
         </CardTitle>
-        <CardDescription className="text-gray-600">
+        <CardDescription className="text-white font-bold">
           Your previous diagnoses and medical consultations
         </CardDescription>
       </CardHeader>
@@ -145,7 +148,7 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
             {diagnoses.slice(0, visibleDiagnoses).map((diagnosis) => (
               <div
                 key={diagnosis.id}
-                className="border border-blue-800/50 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 bg-blue-50"
+                className="border border-blue-800/50 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 bg-white"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
@@ -168,7 +171,7 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
                   <h4 className="font-medium text-sm text-gray-900 mb-2">Symptoms:</h4>
                   <div className="flex flex-wrap gap-1">
                     {diagnosis.symptoms.map((symptom, index) => (
-                      <Badge key={index} variant="outline" className="text-xs bg-blue-50 text-gray-900 border-blue-800/50">
+                      <Badge key={index} variant="outline" className="text-xs bg-white text-gray-900 border-blue-800/50">
                         {symptom}
                       </Badge>
                     ))}
@@ -180,9 +183,9 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
                   <h4 className="font-medium text-sm text-gray-900 mb-2">Diagnoses:</h4>
                   <div className="space-y-2">
                     {diagnosis.diagnoses.slice(0, 3).map((diag, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-blue-50 rounded-lg border-blue-800/50">
+                      <div key={index} className="flex items-center justify-between p-2 bg-white rounded-lg border-blue-800/50">
                         <span className="text-sm font-medium text-gray-900">{diag.name}</span>
-                        <Badge variant="outline" className="text-xs bg-blue-50 text-gray-600 border-blue-800/50">
+                        <Badge variant="outline" className="text-xs bg-white text-gray-600 border-blue-800/50">
                           {diag.probability}%
                         </Badge>
                       </div>
@@ -208,7 +211,7 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
                 {/* Confidence Score */}
                 <div className="flex items-center justify-between pt-2 border-t border-blue-800/50">
                   <span className="text-xs text-gray-600">Confidence Score</span>
-                  <Badge variant="outline" className="text-xs bg-blue-50 text-gray-600 border-blue-800/50">
+                  <Badge variant="outline" className="text-xs bg-white text-gray-600 border-blue-800/50">
                     {diagnosis.confidenceScore.toFixed(1)}%
                   </Badge>
                 </div>
@@ -220,7 +223,7 @@ export const DiagnosisHistory = ({ userId }: DiagnosisHistoryProps) => {
         {diagnoses.length > visibleDiagnoses && (
           <Button
             onClick={handleLoadMore}
-            className="w-full bg-green-300 text-black hover:bg-green-400 rounded-lg shadow-sm"
+            className="w-full bg-blue-300 text-black hover:bg-blue-400 rounded-lg shadow-sm"
           >
             Load More
           </Button>
