@@ -162,7 +162,7 @@ const Auth = () => {
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-300 text-black hover:bg-blue-300 rounded-full transform hover:scale-105 transition-all duration-300"
+                    className="w-full bg-green-300 text-black hover:bg-green-300 hover:text-black active:bg-green-300 focus:bg-green-300 rounded-full transform hover:scale-105 transition-transform duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Signing In...' : 'Sign In'}
@@ -216,7 +216,7 @@ const Auth = () => {
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-300 text-black hover:bg-blue-300 rounded-full transform hover:scale-105 transition-all duration-300"
+                    className="w-full bg-green-300 text-black hover:bg-green-300 hover:text-black active:bg-green-300 focus:bg-green-300 rounded-full transform hover:scale-105 transition-transform duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Creating Account...' : 'Create Account'}

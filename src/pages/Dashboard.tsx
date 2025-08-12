@@ -9,8 +9,7 @@ import { DiagnosisHistory } from '@/components/DiagnosisHistory';
 import { DiseasePredictionInput } from '@/components/DiseasePredictionInput';
 import { 
   LogOut, 
-  User, 
-  Heart, 
+  User,
   Stethoscope, 
   Shield, 
   Activity,
@@ -107,7 +106,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/about')}
                 variant="outline"
                 size="sm"
-                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
+                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
                 <Info className="h-6 w-6" />
                 <span>About</span>
@@ -116,7 +115,7 @@ const Dashboard = () => {
                 onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
+                className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
                 <LogOut className="h-6 w-6" />
                 <span>Logout</span>
@@ -129,7 +128,7 @@ const Dashboard = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
+                className="bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
                 {isMobileMenuOpen ? <X className="h-4 w-4 text-[#1E88E5]" /> : <Menu className="h-4 w-4 text-[#1E88E5]" />}
               </Button>
@@ -148,7 +147,7 @@ const Dashboard = () => {
                   onClick={() => navigate('/about')}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
+                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
                 >
                   <Info className="h-4 w-4 text-[#1E88E5]" />
                   <span>About</span>
@@ -157,7 +156,7 @@ const Dashboard = () => {
                   onClick={handleLogout}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#F5F5F5]"
+                  className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
                 >
                   <LogOut className="h-4 w-4 text-[#1E88E5]" />
                   <span>Logout</span>
@@ -216,7 +215,6 @@ const Dashboard = () => {
             <ChatSection />
           </div>
         </div>
-
       </main>
     </div>
   );
