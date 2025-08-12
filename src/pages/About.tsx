@@ -191,7 +191,7 @@ const About = () => {
               </p>
               <Button
                 onClick={() => navigate('/dashboard')}
-                className="bg-green-300 hover:bg-blue-300 px-8 py-3 text-white font-semibold transform hover:scale-105 transition-all duration-300 rounded-full"
+                className="bg-blue-400 hover:bg-blue-300 px-8 py-3 text-white font-semibold transform hover:scale-105 transition-all duration-300 rounded-full"
                 size="lg"
               >
                 Start Diagnosis

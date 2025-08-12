@@ -108,7 +108,7 @@ const Dashboard = () => {
                 size="sm"
                 className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
-                <Info className="h-6 w-6" />
+                <Info className="h-6 w-6 text-[#212121]" />
                 <span>About</span>
               </Button>
               <Button
@@ -117,7 +117,7 @@ const Dashboard = () => {
                 size="sm"
                 className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
-                <LogOut className="h-6 w-6" />
+                <LogOut className="h-6 w-6 text-[#212121]" />
                 <span>Logout</span>
               </Button>
             </div>
@@ -130,7 +130,7 @@ const Dashboard = () => {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
               >
-                {isMobileMenuOpen ? <X className="h-4 w-4 text-[#1E88E5]" /> : <Menu className="h-4 w-4 text-[#1E88E5]" />}
+                {isMobileMenuOpen ? <X className="h-4 w-4 text-[#212121]" /> : <Menu className="h-4 w-4 text-[#212121]" />}
               </Button>
             </div>
           </div>
@@ -149,7 +149,7 @@ const Dashboard = () => {
                   size="sm"
                   className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
                 >
-                  <Info className="h-4 w-4 text-[#1E88E5]" />
+                  <Info className="h-4 w-4 text-[#212121]" />
                   <span>About</span>
                 </Button>
                 <Button
@@ -158,7 +158,7 @@ const Dashboard = () => {
                   size="sm"
                   className="flex items-center space-x-2 bg-[#FFFFFF] text-[#212121] border-[#E0E0E0] hover:bg-[#FFFFFF] hover:text-[#212121] active:bg-[#FFFFFF] focus:bg-[#FFFFFF] transition-none"
                 >
-                  <LogOut className="h-4 w-4 text-[#1E88E5]" />
+                  <LogOut className="h-4 w-4 text-[#212121]" />
                   <span>Logout</span>
                 </Button>
               </div>
@@ -175,21 +175,21 @@ const Dashboard = () => {
             {/* Tab Navigation */}
             <div className="flex space-x-1 bg-[#F5F9FC] p-1 rounded-lg">
               <Button
-                variant={activeTab === 'diagnosis' ? 'default' : 'ghost'}
+                variant={activeTab === 'diagnosis' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('diagnosis')}
-                className={`flex-1 ${activeTab === 'diagnosis' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`}
+                className={`flex-1 bg-[#1E88E5] text-[#FFFFFF] border-[#1E88E5] hover:bg-[#1E88E5] hover:text-[#FFFFFF] active:bg-[#1E88E5] focus:bg-[#1E88E5] transition-none`}
               >
-                <Activity className="h-4 w-4 mr-2 text-[#43A047]" />
+                <Activity className="h-4 w-4 mr-2 text-[#FFFFFF]" />
                 New Diagnosis
               </Button>
               <Button
-                variant={activeTab === 'history' ? 'default' : 'ghost'}
+                variant={activeTab === 'history' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('history')}
-                className={`flex-1 ${activeTab === 'history' ? 'bg-[#1E88E5] text-[#FFFFFF]' : 'text-[#212121] hover:bg-[#E0E0E0]'}`}
+                className={`flex-1 bg-[#1E88E5] text-[#FFFFFF] border-[#1E88E5] hover:bg-[#1E88E5] hover:text-[#FFFFFF] active:bg-[#1E88E5] focus:bg-[#1E88E5] transition-none`}
               >
-                <Shield className="h-4 w-4 mr-2 text-[#43A047]" />
+                <Shield className="h-4 w-4 mr-2 text-[#FFFFFF]" />
                 History
               </Button>
             </div>

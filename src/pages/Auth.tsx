@@ -36,7 +36,7 @@ const Auth = () => {
       toast({
         title: "Login Successful",
         description: "Welcome to Medical Diagnosis Assistant",
-        style: { background: '#86EFAC', color: '#000000' } // Light Green (bg-green-300)
+        style: { background: '#1d94e4ff', color: '#000000' } // Light Green (bg-green-300)
       });
       navigate('/dashboard');
     } else {
@@ -72,7 +72,7 @@ const Auth = () => {
       toast({
         title: "Account Created",
         description: "Welcome to Medical Diagnosis Assistant",
-        style: { background: '#86EFAC', color: '#000000' } // Light Green (bg-green-300)
+        style: { background: '#29a3eaff', color: '#000000' } // Light Green (bg-green-300)
       });
       navigate('/dashboard');
     } else {
@@ -93,7 +93,7 @@ const Auth = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Stethoscope className="h-12 w-12 text-green-600" /> {/* Light Green */}
+            <Stethoscope className="h-12 w-12 text-blue-500" /> {/* Light Green */}
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
             MediMind
@@ -118,13 +118,13 @@ const Auth = () => {
               <TabsList className="grid w-full grid-cols-2 bg-gray-50 rounded-full">
                 <TabsTrigger 
                   value="login" 
-                  className="data-[state=active]:bg-green-300 data-[state=active]:text-black rounded-full"
+                  className="data-[state=active]:bg-blue-300 data-[state=active]:text-black rounded-full"
                 >
                   Login
                 </TabsTrigger>
                 <TabsTrigger 
                   value="signup" 
-                  className="data-[state=active]:bg-green-300 data-[state=active]:text-black rounded-full"
+                  className="data-[state=active]:bg-blue-300 data-[state=active]:text-black rounded-full"
                 >
                   Sign Up
                 </TabsTrigger>
@@ -162,7 +162,7 @@ const Auth = () => {
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-300 text-black hover:bg-green-300 hover:text-black active:bg-green-300 focus:bg-green-300 rounded-full transform hover:scale-105 transition-transform duration-300"
+                    className="w-full bg-blue-300 text-black hover:bg-blue-300 hover:text-black active:bg-blue-300 focus:bg-blue-300 rounded-full transform hover:scale-105 transition-transform duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Signing In...' : 'Sign In'}
@@ -216,7 +216,7 @@ const Auth = () => {
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-300 text-black hover:bg-green-300 hover:text-black active:bg-green-300 focus:bg-green-300 rounded-full transform hover:scale-105 transition-transform duration-300"
+                    className="w-full bg-blue-300 text-black hover:bg-blue-300 hover:text-black active:bg-blue-300 focus:bg-blue-300 rounded-full transform hover:scale-105 transition-transform duration-300"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Creating Account...' : 'Create Account'}
