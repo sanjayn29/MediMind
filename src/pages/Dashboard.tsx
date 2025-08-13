@@ -211,7 +211,7 @@ const Dashboard = () => {
           </div>
 
           {/* Right Column - Chat Section */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 h-[800px] w-[550px] overflow-y-auto">
             <ChatSection />
           </div>
         </div>
