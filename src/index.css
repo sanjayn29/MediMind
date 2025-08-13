@@ -148,4 +148,13 @@ All colors MUST be HSL.
   .font-medical {
     font-family: var(--font-medical);
   }
+  .no-scrollbar {
+  overflow-y: auto; /* Keep scrolling enabled */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 }
