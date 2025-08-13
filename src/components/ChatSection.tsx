@@ -144,13 +144,13 @@ export const ChatSection = () => {
 
   return (
     <Card className="h-full flex flex-col shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-2xl">
-      <CardHeader className="border-b-[#E0E0E0] bg-[#F5F9FC] p-4 rounded-t-2xl">
-        <CardTitle className="flex items-center space-x-2 text-[#212121]">
-          <div className="p-2.5 bg-[#F5F9FC] rounded-lg">
-            <MessageSquare className="h-5 w-5 text-[#1E88E5]" />
+      <CardHeader className="border-b-[#E0E0E0] bg-black p-4 rounded-t-2xl">
+        <CardTitle className="flex items-center space-x-2 text-white">
+          <div className="p-2.5 bg-black rounded-lg">
+            <MessageSquare className="h-5 w-5 text-white" />
           </div>
           <span className="text-lg font-semibold">AI Medical Assistant</span>
-          <Sparkles className="h-4 w-4 text-[#43A047]" />
+          <Sparkles className="h-4 w-4 text-white" />
         </CardTitle>
       </CardHeader>
       
@@ -245,7 +245,7 @@ export const ChatSection = () => {
         </div>
 
         {/* Input Area */}
-        <div className="border-t-[#E0E0E0] p-4 bg-[#FFFFFF]">
+        <div className="border-t-[#E0E0E0] p-4 bg-black">
           <div className="flex space-x-3">
             <Textarea
               placeholder="Describe your symptoms or ask a medical question..."
@@ -255,13 +255,13 @@ export const ChatSection = () => {
               className="flex-1 min-h-[50px] max-h-[100px] resize-none border-[#E0E0E0] focus:ring-2 focus:ring-[#1E88E5] rounded-lg bg-[#F5F9FC] text-[#212121]"
               disabled={isLoading}
             />
-            <div className="flex flex-col space-y-3">
+12            <div className="flex flex-col space-y-3">
               {isSupported && (
                 <Button
                   onClick={toggleVoiceInput}
                   variant={isListening ? "destructive" : "outline"}
                   size="icon"
-                  className={`h-[50px] w-[50px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
+                  className={`h-[50px] w-[50px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-white' : 'border-[#E0E0E0] text-white hover:bg-black hover:text-white active:bg-black focus:bg-black'}`}
                   disabled={isLoading}
                 >
                   {isListening ? (
@@ -274,7 +274,7 @@ export const ChatSection = () => {
               <Button
                 onClick={sendMessage}
                 variant="default"
-                className="bg-[#1E88E5] hover:bg-[#43A047] h-[50px] w-[50px] p-0 rounded-lg shadow-sm text-[#FFFFFF]"
+                className="bg-black text-white border-black hover:bg-black hover:text-white active:bg-black focus:bg-black h-[50px] w-[50px] p-0 rounded-lg shadow-sm"
                 disabled={!currentMessage.trim() || isLoading}
               >
                 {isLoading ? (

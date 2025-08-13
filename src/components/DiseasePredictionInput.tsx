@@ -203,6 +203,7 @@ export const DiseasePredictionInput = () => {
       .slice(0, 5); // Top 5 predictions
     
     setPredictions(results);
+    setSelectedSymptoms(inputSymptoms); // Update selected symptoms
     setIsLoading(false);
     
     if (results.length > 0) {
@@ -362,7 +363,7 @@ export const DiseasePredictionInput = () => {
           <Button
             onClick={predictDisease}
             variant="default"
-            className="flex-1 bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] rounded-lg shadow-sm"
+            className="flex-1 bg-blue-400 text-black border-blue-400 hover:bg-blue-400 active:bg-blue-400 focus:bg-blue-400 rounded-lg shadow-sm"
             disabled={!isDataLoaded || isLoading || !symptoms.trim()}
           >
             {isLoading ? (
@@ -382,7 +383,7 @@ export const DiseasePredictionInput = () => {
               onClick={clearResults}
               variant="outline"
               size="sm"
-              className="border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC] hover:text-[#43A047] rounded-lg shadow-sm"
+              className="border-blue-400 text-black hover:bg-blue-400 hover:text-black active:bg-blue-400 focus:bg-blue-400 rounded-lg shadow-sm"
             >
               Clear
             </Button>

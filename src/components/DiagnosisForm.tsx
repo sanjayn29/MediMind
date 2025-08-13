@@ -183,7 +183,7 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
               variant="default"
               size="icon"
               disabled={!currentSymptom.trim()}
-              className="bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] h-[48px] w-[48px] rounded-lg shadow-sm"
+              className="bg-blue-400 text-black border-blue-400 hover:bg-blue-400 active:bg-blue-400 focus:bg-blue-400 h-[48px] w-[48px] rounded-lg shadow-sm"
             >
               <Plus className="h-5 w-5" />
             </Button>
@@ -192,7 +192,7 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
                 onClick={toggleVoiceRecording}
                 variant={isListening ? "destructive" : "outline"}
                 size="icon"
-                className={`h-[48px] w-[48px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935]/90 text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
+                className={`h-[48px] w-[48px] rounded-lg shadow-sm ${isListening ? 'bg-[#E53935] hover:bg-[#E53935] text-[#FFFFFF]' : 'border-[#E0E0E0] text-[#1E88E5] hover:bg-[#F5F9FC]'}`}
               >
                 {isListening ? (
                   <MicOff className="h-5 w-5 animate-pulse" />
@@ -239,7 +239,7 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
             <Button 
               onClick={processDiagnosis}
               variant="default"
-              className="w-full bg-[#1E88E5] hover:bg-[#43A047] text-[#FFFFFF] rounded-lg shadow-sm"
+              className="w-full bg-blue-400 text-black border-blue-400 hover:bg-blue-400 active:bg-blue-400 focus:bg-blue-400 rounded-lg shadow-sm"
               disabled={isProcessing}
             >
               {isProcessing ? (
