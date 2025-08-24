@@ -61,7 +61,7 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
         toast({
           title: "Voice Recording Stopped",
           description: "Voice recording has been stopped.",
-          style: { background: '#4CAF50', color: '#FFFFFF' } // Success Green
+          style: { background: '#4CAF55', color: '#FFFFFF' } // Success Green
         });
       } else {
         await startListening();
