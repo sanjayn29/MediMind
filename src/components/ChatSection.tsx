@@ -142,7 +142,7 @@ export const ChatSection = () => {
 
   return (
     <Card className="h-full flex flex-col shadow-xl border-[#E0E0E0] bg-[#FFFFFF] rounded-xl">
-      <CardHeader className="sticky top-0 z-10 border-b-[#E0E0E0] bg-black p-4 rounded-t-xl">
+      <CardHeader className="sticky top-0 z-10 border-b-[#E0E0E0] bg-[#1E88E5] p-4 rounded-t-xl">
         <CardTitle className="flex items-center gap-2 text-white">
           <div className="p-2 bg-black rounded-lg">
             <MessageSquare className="h-5 w-5 text-white" />
@@ -234,7 +234,7 @@ export const ChatSection = () => {
         </div>
 
         {/* Input Area */}
-        <div className="sticky bottom-0 z-10 border-t-[#E0E0E0] p-3 bg-black">
+        <div className="sticky bottom-0 z-10 border-t-[#E0E0E0] p-3 bg-[#1E88E5]">
           <div className="flex gap-2 max-w-[95%] mx-auto"> {/* Extended width with max-w-[95%] */}
             <Textarea
               placeholder="Describe your symptoms or ask a medical question..."
