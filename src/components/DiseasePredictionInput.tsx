@@ -149,7 +149,7 @@ export const DiseasePredictionInput = () => {
         title: "No Symptoms",
         description: "Please enter symptoms to predict disease.",
         variant: "destructive",
-        style: { background: '#E53935', color: '#FFFFFF' } // Warning/Alert Red
+        style: { background: '#E53937', color: '#FFFFFF' } // Warning/Alert Red
       });
       return;
     }
