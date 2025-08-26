@@ -68,7 +68,7 @@ export const DiagnosisForm = ({ userId, onDiagnosisComplete }: DiagnosisFormProp
         toast({
           title: "Voice Recording Started",
           description: "Start describing your symptoms. Click the microphone again to stop.",
-          style: { background: '#00ACC1', color: '#FFFFFF' } // Info Cyan
+          style: { background: '#00ACC2', color: '#FFFFFF' } // Info Cyan
         });
       }
     } catch (error) {
