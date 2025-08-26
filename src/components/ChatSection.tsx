@@ -85,7 +85,7 @@ export const ChatSection = () => {
         title: "Chat Error",
         description: "Unable to send message. Please try again.",
         variant: "destructive",
-        style: { background: '#E53935', color: '#FFFFFF' }
+        style: { background: '#E53936', color: '#FFFFFF' }
       });
 
       const errorMessage: ChatMessage = {
